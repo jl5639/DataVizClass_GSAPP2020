@@ -10,14 +10,23 @@
       
       d3.csv("density_income_ny_counties.csv")
       .then(function(data) {
+        // data is now whole data set from your density_income_ny_counties.csv file
 
-      d3.select("body").selectAll("p")
-      .data(data)
-      .enter()
-      .append("p")
-      .text(function(d) {
-         return d.Geo_NAME
-      
+        console.log(data);
+       
+        d3.select("body").selectAll("p")
+				.data(data)
+				.enter()
+				.append("p")
+        .text(function(d) { 
+          return d.Geo_NAME; // now each new paragraph has the text of the dataset
+         })
+				.style("color", function(d) {
+					if (d.median_income > 65323) {	//Threshold of $65,323
+						return "red";//if the data point is less than $65,323, it is displayed in red
+					} else {
+						return "black";//otherwise it is in black
+					}
    
          
 
@@ -29,16 +38,12 @@
       //make a paragraph for each county, and set the name of the county as its text
       //if the median income of the county is above the median income of new york state, turn the county name red
       
-      //the median income for 2014 - 2018 period is $65,323
+      //the median income for 2014 - 2018 period is $65,323 ["Deliciousness"]
       //the key for the name of the county is "Geo_NAME"
       //the key for median income is "median_income"
-         
+    
       
       })
-   })
-
-   .catch(function(error){
-           // handle error
       })
 
 		</script>
