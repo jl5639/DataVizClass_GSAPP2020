@@ -84,6 +84,13 @@
 								])
 							   .range([h - padding, padding]);
 		          
+				rScale = d3.scaleLinear()
+								.domain([
+									d3.min(dataset, function(d) { return d.Count; }),
+									d3.max(dataset, function(d) { return d.Count; })
+								])
+								.range([5,16]);
+
                   //TODO:add a third linear scale here for the radius of the circles called rScale. 
                 // the domain would be the minimum and maxium values for the count same as the yScale
                //the range would be of your choosing, experiment till it looks ok
@@ -98,12 +105,15 @@
  				   .enter()
  				   .append("text")
  				   .text(function(d) {
+						return (d.Count)
                        //TODO: return the approperiate label value
  				   })
  				   .attr("x", function(d) {
+						return xScale((d.Hour) + rScale(d.Hour)/6)
                        //TODO: return the approperiate x value
  				   })
  				   .attr("y", function(d) {
+						return yScale((d.Count) - rScale(d.Count))
                        //TODO: return the approperiate y value
  				   })
  				   .attr("font-family", "sans-serif")
@@ -115,14 +125,18 @@
 				   .enter()
 				   .append("circle")
 				   .attr("cx", function(d) {
+					return xScale(d.Hour);
                        //TODO: return the approperiate x value
 				   })
 				   .attr("cy", function(d) {
+					return yScale(d.Count);
                        //TODO: return the approperiate y value
 				   })
 				   .attr("r", function(d){
+					return rScale(d.Count);
                        //TODO: use the rScale to create circles whose size correspond to the count
 				   });
+				
                    
                    //TODO: you may see that now the new radius overlaps the labels and are hard to see. adjust it in 1 of 2 ways
                    //either change the order and draw the circles before you draw the labels so that labels lie on top
