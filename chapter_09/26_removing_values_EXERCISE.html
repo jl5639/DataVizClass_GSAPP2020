@@ -144,16 +144,37 @@
 					var labels = svg.selectAll("text")
 						.data(dataset);
 
+						//Enter…
+					labels.enter()
+						.append("text")
+						.text(function(d) {
+							return d;
+						})
+						.attr("text-anchor", "middle")
+						.attr("x", w)
+						.attr("y", function(d) {
+							return h - yScale(d) + 14;
+						})						
+					   .attr("font-family", "sans-serif")
+					   .attr("font-size", "11px")
+					   .attr("fill", "white")
+						.merge(labels)	//Update…
+					   .transition()
+					   .duration(500)
+					   .attr("x", function(d, i) {
+							return xScale(i) + xScale.bandwidth() / 2;
+
 						//Exit…
 						labels.exit()
   						.transition()
   						.duration(500)
-  						.attr("x", w)
+  						.attr("x", -xScale.bandwidth())
   						.remove();
 
+			
 
 						
-
+					   })
 						
 					
 					   
