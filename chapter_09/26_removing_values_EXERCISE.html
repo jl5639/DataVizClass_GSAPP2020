@@ -92,6 +92,7 @@
 					//Update scale domains
 					xScale.domain(d3.range(dataset.length));	//Recalibrate the x scale domain, given the new length of dataset
 					yScale.domain([0, d3.max(dataset)]);		//Recalibrate the y scale domain, given the new max value in dataset
+					{ return d; }
 
 					//Select…
 					var bars = svg.selectAll("rect")			//Select all bars
@@ -148,12 +149,12 @@
 					labels.enter()
 						.append("text")
 						.text(function(d) {
-							return d;
+							return d.value;
 						})
 						.attr("text-anchor", "middle")
 						.attr("x", w)
 						.attr("y", function(d) {
-							return h - yScale(d) + 14;
+							return h - yScale(d.value) + 14;
 						})						
 					   .attr("font-family", "sans-serif")
 					   .attr("font-size", "11px")
@@ -165,14 +166,16 @@
 							return xScale(i) + xScale.bandwidth() / 2;
 
 						//Exit…
-						labels.exit()
+					labels.exit()
   						.transition()
   						.duration(500)
-  						.attr("x", -xScale.bandwidth())
-  						.remove();
+  						.attr("x", w)
+  						.remove(); 
+
+				
 
 			
-
+					   
 						
 					   })
 						
