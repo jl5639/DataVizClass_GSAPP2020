@@ -84,6 +84,12 @@
            //HINT: try switching the values of x and y, and width and height to see what happens, adjust from there
 			d3.select("p")
 				.on("click", function() {
+
+				//Update scale domains
+				xScale.domain(d3.range(dataset.length));	//Recalibrate the x scale domain, given the new length of dataset
+					yScale.domain([0, d3.max(dataset)]);		//Recalibrate the y scale domain, given the new max value in dataset
+
+
 					//Update all rects
 					svg.selectAll("rect")
 					   .data(dataset)
@@ -101,8 +107,8 @@
 			           .attr("height", xScale.bandwidth())
                            //TODO
 			           })
-					   .attr("width", function(d) {
-			   		return  xScale(d);
+					   .attr("width", function(d, i) {
+						return yScale(d);
                            //TODO
 					   })
 
@@ -116,11 +122,11 @@
 					   		return d;
 					   })
 					   .attr("x", function(d, i) {
-						w-xScale(d)
+						xScale(i) + xScale.bandwidth() / 2;
                            //TODO
 					   })
 					   .attr("y", function(d,i) {
-						xScale(i) + xScale.bandwidth() / 2;;
+						h - yScale(d) + 14
                            //TODO
 					   });
 					   				
