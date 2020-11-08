@@ -72,7 +72,7 @@
 			}
 
 			//Load in the data
-			d3.csv("time_scale_data.csv", rowConverter)
+			d3.csv("date_amount.csv", rowConverter)
             .then(function(data) {
 				//Copy data into global dataset
 				dataset = data;
@@ -91,7 +91,7 @@
 
 				yScale = d3.scaleLinear()
 							   .domain([
-									0,  //Because I want a zero baseline
+									700,  //Because I want a zero baseline
 									d3.max(dataset, function(d) { return d.Amount; })
 								])
 							   .range([h - padding, padding]);
@@ -99,13 +99,13 @@
 				//Define X axis
 				xAxis = d3.axisBottom()
 								  .scale(xScale)
-								  .ticks(9)
+								  .ticks(12)
 								  .tickFormat(formatTime);
 
 				//Define Y axis
 				yAxis = d3.axisLeft()
 								  .scale(yScale)
-								  .ticks(10);
+								  .ticks(15);
 
 				//Create SVG element
 				var svg = d3.select("body")

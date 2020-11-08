@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<title>D3: Sorting visual elements</title>
+		<script type="text/javascript" src="../d3.js"></script>
+		<style type="text/css">
+			/* No style rules here yet */		
+		</style>
+	</head>
+	<body>
+		<script type="text/javascript">
+            
+            //ASSIGNMENT: this currently sorts bars on click,
+          //once again, move the number labels to the right rectangles when sorted
+
+			//Width and height
+			var w = 600;
+			var h = 250;
+			var padding = 40;
+			
+			var dataset, xScale, yScale, xAxis, yAxis;  //Empty, for now
+
+//For converting strings to Dates
+var parseTime = d3.timeParse("%m/%d/%y");
+
+//For converting Dates to strings
+var formatTime = d3.timeFormat("%e");
+
+//Function for converting CSV values from strings to Dates and numbers
+var rowConverter = function(d) {
+	return {
+		Date: parseTime(d.Date),
+		Amount: parseInt(d.Amount)
+	};
+}
+
+//Load in the data
+d3.csv("date_instances.csv", rowConverter)
+.then(function(data) {
+	//Copy data into global dataset
+	dataset = data;
+
+	//Discover start and end dates in dataset
+	var startDate = d3.min(dataset, function(d) { return d.Date; });
+	var endDate = d3.max(dataset, function(d) { return d.Date; });
+
+	//Create scale functions
+	xScale = d3.scaleTime()
+				   .domain([
+						d3.timeDay.offset(startDate, -1),  //startDate minus one day, for padding
+						d3.timeDay.offset(endDate, 1)	  //endDate plus one day, for padding
+					])
+				   .range([padding, w - padding]);
+
+	yScale = d3.scaleLinear()
+				   .domain([
+						700,  //Because I want a zero baseline
+						d3.max(dataset, function(d) { return d.Amount; })
+					])
+				   .range([h - padding, padding]);
+})
+			
+			//Create SVG element
+			var svg = d3.select("body")
+						.append("svg")
+						.attr("width", w)
+						.attr("height", h);
+
+			//Create bars
+			svg.selectAll("rect")
+			   .data(dataset)
+			   .enter()
+			   .append("rect")
+			   .attr("x", function(d) {
+			   		return xScale(d);
+			   })
+			   .attr("y", function(d) {
+			   		return h - yScale(d);
+			   })
+			   .attr("width", xScale.bandwidth())
+			   .attr("height", function(d) {
+			   		return yScale(d.first);
+			   })
+			   .attr("fill", function(d) {
+					return "rgb(0, 0, " + Math.round(d * 10) + ")";
+			   })
+			   .on("click", function() {
+			   		sortBars();
+			   });
+
+			//Create labels
+			svg.selectAll("text")
+			   .data(dataset)
+			   .enter()
+			   .append("text")
+			   .text(function(d) {
+			   		return d;
+			   })
+			   .attr("text-anchor", "middle")
+			   .attr("x", function(d, i) {
+			   		return xScale(i) + xScale.bandwidth() / 2;
+			   })
+			   .attr("y", function(d) {
+			   		return h - yScale(d) + 14;
+			   })
+			   .attr("font-family", "sans-serif")
+			   .attr("font-size", "11px")
+			   .attr("fill", "white");
+			
+			//Define sort function
+			var sortBars = function() {
+
+				svg.selectAll("rect")
+				   .sort(function(a, b) {
+					   return d3.ascending(a, b);
+				   	})
+				   .transition()
+				   .duration(1000)
+				   .attr("x", function(d, i) {
+				   		return xScale(i);
+				   });
+                   
+                   //TODO: move the labels accordingly within the sortBars function here
+                   //start by selecting all text
+
+				   svg.selectAll("text")
+				   .sort(function(a, b) {
+					   return d3.ascending(a, b);
+				   	})
+				   .transition()
+				   .duration(1000)
+				   .attr("x", function(d, i) {
+			   		return xScale(i) + xScale.bandwidth() / 2;
+				   });
+                   
+
+			};			
+			
+		</script>
+	</body>
+</html>
