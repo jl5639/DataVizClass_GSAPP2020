@@ -45,11 +45,7 @@
 		<script type="text/javascript">
 
 
-            //ASSIGNMENT: the data for this visualization is not loaded correctly.
-            //there are 2 bugs - both in line 42-43 - starting at d3.csv("..
-            //fix the file path and the csv function so that the data is loaded and displays correctly
-            //Then implement a tooltip of your choice for the circles on rollover.
-            
+                
 			//Width and height
 			var w = 600;
 			var h = 400;
@@ -91,7 +87,7 @@
 
 				yScale = d3.scaleLinear()
 							   .domain([
-									700,  //Because I want a zero baseline
+									700,  //Because I want a 700 baseline
 									d3.max(dataset, function(d) { return d.Amount; })
 								])
 							   .range([h - padding, padding]);
@@ -105,7 +101,7 @@
 				//Define Y axis
 				yAxis = d3.axisLeft()
 								  .scale(yScale)
-								  .ticks(15);
+								  .ticks(10);
 
 				//Create SVG element
 				var svg = d3.select("body")
