@@ -30,13 +30,13 @@ path.line-0 {
     path.line-1 {
     fill: none;
     stroke: #2b2929;
-    stroke-dasharray: 32;
+    stroke-dasharray: 2;
     }
     
     path.line-2 {
     fill: none;
     stroke: #9c9c9c;
-    stroke-dasharray: 36;
+    stroke-dasharray: 6;
     }
 
     .Instances_label {

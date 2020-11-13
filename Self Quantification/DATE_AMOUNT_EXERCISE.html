@@ -2,7 +2,7 @@
 <html lang="en">
 	<head>
 		<meta charset="utf-8">
-		<title>D3: Time axis, prettier</title>
+		<title>Date & Amount</title>
 		<script type="text/javascript" src="../d3.js"></script>
 		<style type="text/css">
 
@@ -37,6 +37,7 @@
 		</style>
 	</head>
 	<body>
+		<p>Number of lit windows per day</p>
 		<div id="tooltip" class="hidden">
 			<p><strong>Date & Amount</strong></p>
 			<p><span id="Amount">100</span>%</p>
@@ -54,7 +55,8 @@
 			var dataset, xScale, yScale, xAxis, yAxis;  //Empty, for now
 
 			//For converting strings to Dates
-			var parseTime = d3.timeParse("%m/%d/%y");
+			//NEW
+      var parseTime = d3.timeParse("%d-%m-%y");
 
 			//For converting Dates to strings
 			var formatTime = d3.timeFormat("%e");
@@ -72,7 +74,7 @@
             .then(function(data) {
 				//Copy data into global dataset
 				dataset = data;
-
+				console.log(data)
 				//Discover start and end dates in dataset
 				var startDate = d3.min(dataset, function(d) { return d.Date; });
 				var endDate = d3.max(dataset, function(d) { return d.Date; });
@@ -139,6 +141,7 @@
 				   .enter()
 				   .append("circle")
 				   .attr("cx", function(d) {
+					   console.log(d.Date)
 				   		return xScale(d.Date);
 				   })
 				   .attr("cy", function(d) {

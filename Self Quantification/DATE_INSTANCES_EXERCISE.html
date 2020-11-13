@@ -35,6 +35,8 @@ const svg = d3.select("div#container").append("svg")
 const timeConv = d3.timeParse("%d-%b-%Y");
 const dataset = d3.csv("date_instances.csv");
 dataset.then(function(data) {
+    
+    console.log(data)
     const slices = data.columns.slice(1).map(function(id) {
         return {
             id: id,
@@ -46,6 +48,7 @@ dataset.then(function(data) {
             })
         };
     });
+    
 
 console.log("Column headers", data.columns);
 console.log("Column headers without date", data.columns.slice(1));
@@ -61,7 +64,7 @@ console.log("Date element",slices[0].values[0].date);
 console.log("Array length",(slices[0].values).length);
 
 //----------------------------SCALES-----------------------------//
-const xScale = d3.scaleTime().range([0,width]);
+const xScale = d3.scaleTime().range([0,width - 200]);
 const yScale = d3.scaleLinear().rangeRound([height, 0]);
 xScale.domain(d3.extent(data, function(d){
     return timeConv(d.date)}));
@@ -85,7 +88,8 @@ const xaxis = d3.axisBottom()
 //----------------------------LINES------------------------------//
 
 const line = d3.line()
-    .x(function(d) { return xScale(d.date); })
+    .x(function(d) {console.log(xScale(d.date));
+; return xScale(d.date); })
     .y(function(d) { return yScale(d.measurement); });
 
     let id = 0;
@@ -134,6 +138,9 @@ const lines = svg.selectAll("lines")
 
     lines.append("path")
     .attr("class", ids)
+    //I added these 2 lines to color the chart because I think maybe some styles are missing in this file?
+    .style("fill","none")
+    .style("stroke","black")
     .attr("d", function(d) { return line(d.values); });
 
     lines.append("text")
@@ -142,11 +149,34 @@ const lines = svg.selectAll("lines")
         return {
             id: d.id,
             value: d.values[d.values.length - 1]}; })
-    .attr("transform", function(d) {
-            return "translate(" + (xScale(d.value.date) + 10)  
-            + "," + (yScale(d.value.measurement) + 5 ) + ")"; })
-    .attr("x", 100)
+    //.attr("transform", function(d) {
+     //       return "translate(" + (xScale(d.value.date) + 10)  
+     //      + "," + (yScale(d.value.measurement) + 5 ) + ")"; })
+    //NEW
+    .attr("y", function(d){
+      return yScale(d.value.measurement)
+    })
+    .attr("x",width-200)
     .text(function(d) { return ("Time") + d.id; });
+    
+    
+    lines.append("text")
+    .attr("class","Instances_label")
+    .datum(function(d) {
+        return {
+            id: d.id,
+            value: d.values[0]}; })
+    //.attr("transform", function(d) {
+     //       return "translate(" + (xScale(d.value.date) + 10)  
+     //      + "," + (yScale(d.value.measurement) + 5 ) + ")"; })
+    //NEW
+    .attr("y", function(d){
+      //console.log(d.value.measurement)
+      return yScale(d.value.measurement)
+    })
+    .attr("x",0)
+    .text(function(d) { return ("Time") + d.id; });
+    
 	
 
 	//---------------------------POINTS-----------------------------// 
